@@ -11,9 +11,8 @@ namespace cw3.Controllers
     [Route("api/students")]
     public class StudentsController : ControllerBase
     {
-        private  DAL.IDdService _dbService;
-
-        public StudentsController(DAL.IDdService dbService) 
+        private DAL.IDdService _dbService;
+        public StudentsController(DAL.IDdService dbService)
         {
             _dbService = dbService;
         }
@@ -22,11 +21,16 @@ namespace cw3.Controllers
         {
             return Ok(_dbService.GetStudents());
         }
-
+        [HttpGet("{Index}")]
+        public IActionResult GetStudents(int index)
+        {
+            
+            return Ok(_dbService.GetStudents(index));
+        }
         [HttpPost]
         public IActionResult CreateStudent(Models.Student student)
         {
-            student.IndexNumber = $"S{new Random().Next(1, 20000)}";
+            student.IndexNumber = new Random().Next(1, 20000);
             return Ok(student);
         }
         [HttpPut("{id}")]

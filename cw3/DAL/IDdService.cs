@@ -9,6 +9,6 @@ namespace cw3.DAL
     {
 
         public IEnumerable<Models.Student> GetStudents();
-
+        public Models.Student GetStudents(int index);
     }
 }
