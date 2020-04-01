@@ -9,11 +9,11 @@ namespace cw3.Models
     {
   
 
-        public int IndexNumber { get; set; }
+        public string IndexNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public int Semester { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
     }
 }

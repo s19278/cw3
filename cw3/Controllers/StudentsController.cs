@@ -22,7 +22,7 @@ namespace cw3.Controllers
             return Ok(_dbService.GetStudents());
         }
         [HttpGet("{Index}")]
-        public IActionResult GetStudents(int index)
+        public IActionResult GetStudents(string index)
         {
             
             return Ok(_dbService.GetStudents(index));
@@ -30,7 +30,7 @@ namespace cw3.Controllers
         [HttpPost]
         public IActionResult CreateStudent(Models.Student student)
         {
-            student.IndexNumber = new Random().Next(1, 20000);
+            
             return Ok(student);
         }
         [HttpPut("{id}")]

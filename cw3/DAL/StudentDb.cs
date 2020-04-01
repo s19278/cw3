@@ -1,32 +1,42 @@
 ﻿using cw3.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace cw3.DAL
 {
-    public class StudentDb : IDdService
+    public class StudentDb : Controller,IDdService
     {
         private static IEnumerable<Models.Student> _students;
-        private const string MyDatabase = "Data Source=db-mssql;Initial Catalog=s19278;Integrated Security=True";
+        private const string MyDatabase = "Data Source=db-mssql;Initial Catalog=s19278;Integrated Security=True;";
+        static StudentDb()
+        {
 
-        static StudentDb(){
+        }
+
+
+
+        public IEnumerable<Student> GetStudents()
+        {
             using (var client = new SqlConnection(MyDatabase))
             {
-                using (var command = new SqlCommand()) {
-
-                    command.Connection=client;
+                using (var command = new SqlCommand())
+                {
+                    _students = Enumerable.Empty<Student>();
+                    command.Connection = client;
                     command.CommandText = "SELECT IndexNumber , FirstName,LastName , BirthDate,Semester , Name FROM Student,Enrollment,Studies where Student.IdEnrollment= Enrollment.IdEnrollment and Enrollment.idstudy=Studies.idstudy";
 
                     client.Open();
                     var qr = command.ExecuteReader();
                     List<Models.Student> st = new List<Models.Student>();
-                    while (qr.Read()) 
+                    while (qr.Read())
                     {
 
                         var stud = new Student();
-                        stud.IndexNumber = int.Parse(qr["IndexNumber"].ToString());
+                        stud.IndexNumber = qr["IndexNumber"].ToString();
                         stud.FirstName = qr["FirstName"].ToString();
                         stud.LastName = qr["LastName"].ToString();
                         stud.BirthDate = DateTime.Parse(qr["BirthDate"].ToString());
@@ -41,24 +51,152 @@ namespace cw3.DAL
 
                 }
 
-
+                return _students;
             }
-
-        }
+           
         
-        
-        
-        public IEnumerable<Student> GetStudents()
-        {
-            return _students;
+           
            
         }
-        public Student GetStudents(int id)
+        public Student GetStudents(string id)
         {
             List<Student> st = _students.ToList();
             var response = st.Find(r => r.IndexNumber == id);
             return response;
 
+        }
+        public IActionResult AddStudent(Models.EnrollStudClass enroll)
+        {
+            var st = new Models.Student();
+            st.IndexNumber = enroll.IndexNumber;
+            st.FirstName = enroll.FirstName;
+            st.LastName = enroll.LastName;
+            st.BirthDate = DateTime.Parse(enroll.BirthDate);
+            
+            using (var client = new SqlConnection(MyDatabase))
+                using (var command = new SqlCommand())
+                 {
+                    command.Connection = client;
+                    var enrollment = new Enrollment();
+                    client.Open();
+                    SqlTransaction tran = client.BeginTransaction();
+                    try
+                    {
+                    
+                    command.CommandText = "SELECT  Name FROM Studies where Name = @stud";
+                    command.Parameters.AddWithValue("stud", enroll.Studies);
+                    command.Parameters.AddWithValue("Fname", enroll.FirstName);
+                    command.Parameters.AddWithValue("Lname", enroll.LastName);
+                    command.Parameters.AddWithValue("Bdate", enroll.BirthDate);
+                    command.Parameters.AddWithValue("id", enroll.IndexNumber);
+                    command.Transaction = tran;
+                    SqlDataReader qr = command.ExecuteReader();
+                        while (!qr.Read())
+                        {
+                            tran.Rollback();
+                            return NotFound(400 + " - Nie ma takich studiów");
+
+                        }
+                        qr.Close();
+                        command.CommandText = "SELECT * FROM Enrollment inner join studies on Studies.IdStudy = Enrollment.IdStudy where Studies.Name = @stud and semester = 1";
+                        qr = command.ExecuteReader();
+                        while (!qr.HasRows)
+                        {
+                            qr.Close();
+                            command.CommandText = "INSERT into enrollment(idEnrollment,semester,idstudy,startdate)values((select Max(idEnrollment)+1 from enrollment),1,(select idstudy from studies where name=@stud),GETDATE())";
+                            command.ExecuteNonQuery();
+                        
+                        tran.Commit();
+                        }
+                        qr.Close();
+                    command.CommandText = "select * from student where IndexNumber=@id";
+                    
+                    qr = command.ExecuteReader();
+                        if (!qr.HasRows)
+                        {
+                            qr.Close();
+                            command.CommandText = "insert into Student(IndexNumber,FirstName,LastName,BirthDate,IdEnrollment)values(@id,@Fname,@Lname, @Bdate,(select idEnrollment from enrollment inner join studies on enrollment.IdStudy=studies.IdStudy where studies.Name=@stud and semester=1))";
+                            command.ExecuteNonQuery();
+                       
+                        }
+                        else
+                        {
+                            tran.Rollback();
+                            return NotFound("Id nie jest unikalne");
+                        }
+                         qr.Close();
+                        
+
+                        command.CommandText = "select IdEnrollment,StartDate,Semester from Enrollment inner join Studies on Enrollment.IdStudy=Studies.IdStudy where name=@stud and semester= 1";
+                        qr = command.ExecuteReader();
+                        if (qr.Read())
+                        {
+                        
+                        enrollment.idEnrollment = qr["idEnrollment"].ToString();
+                        enrollment.Semester = qr["Semester"].ToString();
+                        enrollment.StartDate = qr["StartDate"].ToString();
+                        }
+                        qr.Close();
+                    tran.Commit();
+                }
+                    catch(SqlException ex){
+                        tran.Rollback();
+                    }
+
+
+
+
+                return StatusCode(201, enrollment);
+            }
+
+
+            
+            
+        }
+
+        public IActionResult Promote(PromoteModel enroll)
+        {
+            using (var client = new SqlConnection(MyDatabase))
+            {
+                using (var command = new SqlCommand())
+                {
+                    var enrollment = new Enrollment();
+                    command.Connection = client;
+                    command.CommandText = "SELECT * from Enrollment inner join studies on Studies.idstudy = Enrollment.idstudy where Semester = @sem and Studies.name = @stud";   
+                    command.Parameters.AddWithValue("stud", enroll.Studies);
+                    command.Parameters.AddWithValue("sem", enroll.Semester);
+                    client.Open();
+                    var qr = command.ExecuteReader();
+                    if (qr.HasRows)
+                    {
+                        qr.Close();
+                        command.CommandText = "exec Promote @stud, @sem";
+                        command.ExecuteNonQuery();
+                        qr.Close();
+                        command.CommandText = "select IdEnrollment, StartDate, Semester from Enrollment inner join Studies on Enrollment.IdStudy=Studies.IdStudy where  semester= @sem + 1 and name=@stud";
+                        qr = command.ExecuteReader();
+                        if (qr.Read())
+                        {
+
+                            enrollment.idEnrollment = qr["idEnrollment"].ToString();
+                            enrollment.Semester = qr["Semester"].ToString();
+                            enrollment.StartDate = qr["StartDate"].ToString();
+                        }
+                        qr.Close();
+                        return StatusCode(201, enrollment);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+
+                    
+
+
+                }
+
+
+            }
         }
     }
 }
