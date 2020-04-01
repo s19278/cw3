@@ -1,0 +1,28 @@
+Create procedure Promote @Stud VarChar(20),@Sem int
+as
+begin
+    declare @idEnrollment int=(select idEnrollment from Enrollment where Semester=@Sem+1 and IdStudy=(
+																										select IdStudy 
+																										from Studies
+																									where Name=@Stud));
+    if @idEnrollment is null
+    begin
+        select @idEnrollment=Max(idEnrollment)+1 
+		from Enrollment;
+        insert into Enrollment(IdEnrollment,Semester,IdStudy,StartDate)
+        values(@idEnrollment,@Sem+1,(
+									select IdStudy 
+									from Studies
+									where Name=@Stud),GETDATE());
+    end
+
+    update Student set
+    IdEnrollment=@idEnrollment
+    where IdEnrollment=(
+						select idEnrollment 
+						from Enrollment 
+						where Semester=@Sem and IdStudy=(
+														select IdStudy 
+														from Studies 
+														where Name=@Stud))
+end
