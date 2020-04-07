@@ -58,12 +58,44 @@ namespace cw3.DAL
            
            
         }
-        public Student GetStudents(string id)
+        public IActionResult GetStudents(string id)
         {
-            List<Student> st = _students.ToList();
-            var response = st.Find(r => r.IndexNumber == id);
-            return response;
 
+            using (var client = new SqlConnection(MyDatabase))
+            {
+                using (var command = new SqlCommand())
+                {
+                    _students = Enumerable.Empty<Student>();
+                    command.Connection = client;
+                    command.CommandText = "SELECT IndexNumber , FirstName,LastName , BirthDate,Semester , Name FROM Student,Enrollment,Studies where Student.IdEnrollment= Enrollment.IdEnrollment and Enrollment.idstudy=Studies.idstudy and Student.IndexNumber=@ind ";
+                    command.Parameters.AddWithValue("ind", id);
+                    client.Open();
+                    var qr = command.ExecuteReader();
+
+                    while (qr.Read())
+                    {
+
+                        var stud = new Student();
+                        stud.IndexNumber = qr["IndexNumber"].ToString();
+                        stud.FirstName = qr["FirstName"].ToString();
+                        stud.LastName = qr["LastName"].ToString();
+                        stud.BirthDate = DateTime.Parse(qr["BirthDate"].ToString());
+                        stud.Semester = int.Parse(qr["Semester"].ToString());
+                        stud.Name = qr["Name"].ToString();
+                        return StatusCode(201, stud); ;
+                    }
+
+
+
+
+                }
+
+
+
+
+                return NotFound();
+
+            }
         }
         public IActionResult AddStudent(Models.EnrollStudClass enroll)
         {
@@ -195,6 +227,35 @@ namespace cw3.DAL
 
                 }
 
+
+            }
+        }
+
+        public bool CheckIndex(string index)
+        {
+            using (var client = new SqlConnection(MyDatabase))
+            {
+                using (var command = new SqlCommand())
+                {
+                   
+                    command.Connection = client;
+                    command.CommandText = "SELECT IndexNumber FROM Student where Student.IndexNumber=@ind ";
+                    command.Parameters.AddWithValue("ind", index);
+                    client.Open();
+                    var qr = command.ExecuteReader();
+
+                    while (qr.Read())
+                    {
+
+                        return true ;
+                    }
+
+
+
+
+                }
+
+                return false;
 
             }
         }

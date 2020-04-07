@@ -1,0 +1,47 @@
+
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/students/1
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": 1,
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/1
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": 1,
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/1
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********

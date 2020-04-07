@@ -11,9 +11,10 @@ namespace cw3.DAL
     {
 
         public IEnumerable<Models.Student> GetStudents();
-        public Models.Student GetStudents(string index);
+        public IActionResult GetStudents(string index);
 
         public IActionResult AddStudent(Models.EnrollStudClass enroll);
         public IActionResult Promote(PromoteModel enroll);
+        public bool  CheckIndex(string index);
     }
 }
