@@ -1,9 +1,15 @@
 ﻿using cw3.Models;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace cw3.DAL
@@ -12,9 +18,15 @@ namespace cw3.DAL
     {
         private static IEnumerable<Models.Student> _students;
         private const string MyDatabase = "Data Source=db-mssql;Initial Catalog=s19278;Integrated Security=True;";
+        private int nameid = 0;
         static StudentDb()
         {
 
+        }
+        public IConfiguration Configuration { get; set; }
+        public StudentDb(IConfiguration configuration)
+        {
+            Configuration = configuration;
         }
 
 
@@ -259,5 +271,145 @@ namespace cw3.DAL
 
             }
         }
+
+        public IActionResult Singin(Singin singin)
+        {
+            using (var client = new SqlConnection(MyDatabase))
+            {
+                using (var command = new SqlCommand())
+                {
+
+                    command.Connection = client;
+                    command.CommandText = "SELECT * FROM Student where Student.IndexNumber=@ind ";
+                    command.Parameters.AddWithValue("ind", singin.Login);
+                    command.Parameters.AddWithValue("pass", singin.Haslo);
+                    client.Open();
+                    var qr = command.ExecuteReader();
+
+                    while (qr.Read())
+                    {
+                        var pass = qr["Password"].ToString();
+                        var salt = qr["Salt"].ToString();
+                        if (HashedPass(singin.Haslo, salt) == pass)
+                        {
+                            qr.Close();
+                            var refreshToken = Guid.NewGuid();
+                            command.CommandText = "UPDATE Student SET Refreshtkn =@tkn where Student.IndexNumber=@ind ";
+                            command.Parameters.AddWithValue("tkn", refreshToken);
+                            
+                            command.ExecuteNonQuery();
+                            nameid++;
+                            var claims = new[]{
+                            new Claim(ClaimTypes.NameIdentifier, ""+nameid),
+                            new Claim(ClaimTypes.Name, singin.Login),
+                            new Claim(ClaimTypes.Role, ""),
+                            new Claim(ClaimTypes.Role, "student")
+                            };
+
+                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
+                            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                            var token = new JwtSecurityToken
+                        (
+                            issuer: "Gakko",
+                            audience: "Students",
+                            claims: claims,
+                            expires: DateTime.Now.AddSeconds(10),
+                            signingCredentials: creds
+                        );
+                            Console.WriteLine(refreshToken);
+                            return Ok(new
+                            {
+                                token = new JwtSecurityTokenHandler().WriteToken(token),
+                                refreshToken
+                            });
+
+                        }
+                    }
+
+
+
+                }
+
+
+            }
+            return Unauthorized();
+            
+        }
+
+        public IActionResult Refresh(string rtoken)
+        {
+            using (var client = new SqlConnection(MyDatabase))
+            {
+                using (var command = new SqlCommand())
+                {
+
+                    command.Connection = client;
+                    command.CommandText = "SELECT * FROM Student where Student.Refreshtkn =@token ";
+                    command.Parameters.AddWithValue("token",rtoken);
+                    
+                    client.Open();
+                    var qr = command.ExecuteReader();
+
+                    while (qr.Read())
+                    {
+                        var id = qr["IndexNumber"].ToString();
+                        qr.Close();
+                        var refreshToken = Guid.NewGuid();
+                        command.CommandText = "UPDATE Student SET Refreshtkn =@tkn where Student.IndexNumber=@ind ";
+                        command.Parameters.AddWithValue("tkn", refreshToken);
+                        command.Parameters.AddWithValue("ind", id);
+                        command.ExecuteNonQuery();
+                        nameid++;
+                        var claims = new[]{
+                            new Claim(ClaimTypes.NameIdentifier, ""+nameid),
+                            new Claim(ClaimTypes.Name, id),
+                            new Claim(ClaimTypes.Role, ""),
+                            new Claim(ClaimTypes.Role, "student")
+                            };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]));
+                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        var token = new JwtSecurityToken
+                    (
+                        issuer: "Gakko",
+                        audience: "Students",
+                        claims: claims,
+                        expires: DateTime.Now.AddMinutes(10),
+                        signingCredentials: creds
+                    );
+
+                        return Ok(new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            refreshToken
+                        });
+
+                    }
+
+
+
+
+                }
+
+
+            }
+            return Unauthorized();
+
+        }
+        public static string HashedPass(string haslo, string salt)
+        {
+            var haslohash = KeyDerivation.Pbkdf2(
+                                password: haslo,
+                                salt: Encoding.UTF8.GetBytes(salt),
+                                prf: KeyDerivationPrf.HMACSHA512,
+                                iterationCount: 20000,
+                                numBytesRequested: 256 / 8);
+            return Convert.ToBase64String(haslohash);
+
+        }
     }
+   
 }
+

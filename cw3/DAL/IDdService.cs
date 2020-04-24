@@ -16,5 +16,7 @@ namespace cw3.DAL
         public IActionResult AddStudent(Models.EnrollStudClass enroll);
         public IActionResult Promote(PromoteModel enroll);
         public bool  CheckIndex(string index);
-    }
+        IActionResult Singin(Singin singin);
+		IActionResult Refresh(string token);
+	}
 }

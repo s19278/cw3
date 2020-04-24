@@ -45,3 +45,339 @@ Body: {
 	"lastname": "Markiewicz"
 }
 *********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/Singin
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/enrolments
+Method: POST
+QueryString: 
+Body: 
+*********
+Path: /api/enrolments
+Method: POST
+QueryString: 
+Body: 
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /api/students/s19278
+Method: GET
+QueryString: 
+Body: {
+	"idstudent": "s19278",
+	"firstname": "Michal" ,
+	"lastname": "Markiewicz"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo1"
+}
+*********
+Path: /weatherforecast
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /weatherforecast
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/refresh/d3bc5c2a-6c3e-4596-899f-3132dce67ca4
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/signin/refresh/d3bc5c2a-6c3e-4596-899f-3132dce67ca4
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/singin
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/singin/refresh/a951ce0b-0e13-43ad-9b2d-9ad4f74b57f9
+Method: POST
+QueryString: 
+Body: {
+	"Login": "s19272" ,
+	"Haslo": "Losowehaslo"
+}
+*********
+Path: /api/singin/refresh/2f6036b3-8d9e-4220-8ee1-3a26f1727377
+Method: POST
+QueryString: 
+Body: 
+*********

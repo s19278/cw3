@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cw3.Controllers
-{
+{   [Authorize]
     [ApiController]
     [Route("api/students")]
     public class StudentsController : ControllerBase
@@ -33,6 +33,7 @@ namespace cw3.Controllers
             
             return Ok(student);
         }
+        
         [HttpPut("{id}")]
         public IActionResult updateStudent(int id)
         {
