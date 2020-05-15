@@ -16,7 +16,7 @@ namespace cw3.Controllers
         {
             _dbService = dbService;
         }
-        [HttpGet]
+        [HttpGet("list")]
         public IActionResult GetStudents()
         {
             return Ok(_dbService.GetStudents());
@@ -34,17 +34,17 @@ namespace cw3.Controllers
             return Ok(student);
         }
         
-        [HttpPut("{id}")]
-        public IActionResult updateStudent(int id)
+        [HttpPut("update")]
+        public IActionResult updateStudent(Models2.Student student)
         {
        
-            return Ok("Aktualizacja studenta o id "+id+" dokonczona");
+            return Ok(_dbService.updateStudent(student));
         }
-        [HttpDelete("{id}")]
-        public IActionResult deleteStudent(int id)
+        [HttpDelete("delete/{id}")]
+        public IActionResult deleteStudent(String id)
         {
 
-            return Ok("Usuwanie studenta o id " + id + "zakończone");
+            return Ok(_dbService.deleteStudent(id));
         }
     }
 }

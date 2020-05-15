@@ -35,7 +35,7 @@ namespace cw3
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
                         };
                     });
-            services.AddScoped<DAL.IDdService, DAL.StudentDb>();
+            services.AddScoped<DAL.IDdService, DAL.StudentDbEntity>();
             services.AddControllers()
                 .AddXmlSerializerFormatters();
         }

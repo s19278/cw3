@@ -381,3 +381,42 @@ Method: POST
 QueryString: 
 Body: 
 *********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /api/students
+Method: GET
+QueryString: ?id
+Body: {
+	"atrybut":"wrt"
+	"wiek":25
+	"isPelnoletni":false
+}
+*********
+Path: /
+Method: GET
+QueryString: 
+Body: 
+*********
+Path: /favicon.ico
+Method: GET
+QueryString: 
+Body: 
+*********

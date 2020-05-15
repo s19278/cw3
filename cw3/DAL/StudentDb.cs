@@ -31,13 +31,13 @@ namespace cw3.DAL
 
 
 
-        public IEnumerable<Student> GetStudents()
+        public IEnumerable<Models.Student> GetStudents()
         {
             using (var client = new SqlConnection(MyDatabase))
             {
                 using (var command = new SqlCommand())
                 {
-                    _students = Enumerable.Empty<Student>();
+                    _students = Enumerable.Empty<Models.Student>();
                     command.Connection = client;
                     command.CommandText = "SELECT IndexNumber , FirstName,LastName , BirthDate,Semester , Name FROM Student,Enrollment,Studies where Student.IdEnrollment= Enrollment.IdEnrollment and Enrollment.idstudy=Studies.idstudy";
 
@@ -47,7 +47,7 @@ namespace cw3.DAL
                     while (qr.Read())
                     {
 
-                        var stud = new Student();
+                        var stud = new Models.Student();
                         stud.IndexNumber = qr["IndexNumber"].ToString();
                         stud.FirstName = qr["FirstName"].ToString();
                         stud.LastName = qr["LastName"].ToString();
@@ -77,7 +77,7 @@ namespace cw3.DAL
             {
                 using (var command = new SqlCommand())
                 {
-                    _students = Enumerable.Empty<Student>();
+                    _students = Enumerable.Empty<Models.Student>();
                     command.Connection = client;
                     command.CommandText = "SELECT IndexNumber , FirstName,LastName , BirthDate,Semester , Name FROM Student,Enrollment,Studies where Student.IdEnrollment= Enrollment.IdEnrollment and Enrollment.idstudy=Studies.idstudy and Student.IndexNumber=@ind ";
                     command.Parameters.AddWithValue("ind", id);
@@ -87,7 +87,7 @@ namespace cw3.DAL
                     while (qr.Read())
                     {
 
-                        var stud = new Student();
+                        var stud = new Models.Student();
                         stud.IndexNumber = qr["IndexNumber"].ToString();
                         stud.FirstName = qr["FirstName"].ToString();
                         stud.LastName = qr["LastName"].ToString();
@@ -121,7 +121,7 @@ namespace cw3.DAL
                 using (var command = new SqlCommand())
                  {
                     command.Connection = client;
-                    var enrollment = new Enrollment();
+                    var enrollment = new Models.Enrollment();
                     client.Open();
                     SqlTransaction tran = client.BeginTransaction();
                     try
@@ -204,7 +204,7 @@ namespace cw3.DAL
             {
                 using (var command = new SqlCommand())
                 {
-                    var enrollment = new Enrollment();
+                    var enrollment = new Models.Enrollment();
                     command.Connection = client;
                     command.CommandText = "SELECT * from Enrollment inner join studies on Studies.idstudy = Enrollment.idstudy where Semester = @sem and Studies.name = @stud";   
                     command.Parameters.AddWithValue("stud", enroll.Studies);
@@ -314,7 +314,7 @@ namespace cw3.DAL
                             issuer: "Gakko",
                             audience: "Students",
                             claims: claims,
-                            expires: DateTime.Now.AddSeconds(10),
+                            expires: DateTime.Now.AddMinutes(10),
                             signingCredentials: creds
                         );
                             Console.WriteLine(refreshToken);
@@ -408,6 +408,26 @@ namespace cw3.DAL
                                 numBytesRequested: 256 / 8);
             return Convert.ToBase64String(haslohash);
 
+        }
+
+        public IActionResult updateStudent(Models2.Student student)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult deleteStudent(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        IActionResult IDdService.GetStudents()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult deleteStudent(string id)
+        {
+            throw new NotImplementedException();
         }
     }
    
